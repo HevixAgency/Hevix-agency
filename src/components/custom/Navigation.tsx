@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import logo from '/home/wesley/Documentos/HevixAgency2/app/dist/assets/logo.svg';
+import logo from '@/assets/logo.svg';
 
 const navLinks = [
   { label: 'Serviços', href: '#servicos' },

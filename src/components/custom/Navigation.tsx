@@ -30,14 +30,6 @@ export function Navigation() {
     setIsMobileMenuOpen(false);
   };
 
-  const scrollToForm = () => {
-    const form = document.querySelector('#formulario');
-    if (form) {
-      form.scrollIntoView({ behavior: 'smooth' });
-    }
-    setIsMobileMenuOpen(false);
-  };
-
   return (
     <>
       <nav
@@ -83,7 +75,7 @@ export function Navigation() {
             {/* CTA Button - right */}
             <div className="hidden lg:block shrink-0">
               <Button
-                onClick={scrollToForm}
+                onClick={() => window.open('https://wa.me/558196456577', '_blank')}
                 className="bg-hevix-orange hover:bg-hevix-orange-light text-white font-medium px-6 py-2 rounded-full transition-all duration-300 hover:shadow-glow hover:-translate-y-0.5"
               >
                 Falar com Especialista
@@ -134,7 +126,7 @@ export function Navigation() {
             ))}
             <hr className="border-white/10 my-2" />
             <Button
-              onClick={scrollToForm}
+              onClick={() => window.open('https://wa.me/558196456577', '_blank')}
               className="bg-hevix-orange hover:bg-hevix-orange-light text-white font-medium w-full py-3 rounded-full"
             >
               Falar com Especialista

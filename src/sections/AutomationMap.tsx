@@ -6,7 +6,6 @@ import {
   Megaphone, 
   Mail, 
   BarChart3,
-  Cpu,
   ArrowRight
 } from 'lucide-react';
 import gsap from 'gsap';
@@ -62,7 +61,6 @@ export function AutomationMap() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Header animation
       gsap.fromTo(
         headerRef.current,
         { y: 50, opacity: 0 },
@@ -79,7 +77,6 @@ export function AutomationMap() {
         }
       );
 
-      // Center hub animation
       gsap.fromTo(
         centerRef.current,
         { scale: 0, opacity: 0 },
@@ -96,7 +93,6 @@ export function AutomationMap() {
         }
       );
 
-      // Cards animation
       const cards = cardsRef.current?.querySelectorAll('.automation-card');
       if (cards) {
         gsap.fromTo(
@@ -121,18 +117,19 @@ export function AutomationMap() {
     return () => ctx.revert();
   }, []);
 
+  // ✅ Raio aumentado de 180 → 260 para mais espaço entre os cards
+  const ORBIT_RADIUS = 260;
+
   return (
     <section
       ref={sectionRef}
       id="servicos"
       className="relative py-20 lg:py-32 overflow-hidden"
     >
-      {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-hevix-dark via-hevix-orange/5 to-hevix-dark" />
       
       <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8 xl:px-12">
         <div className="max-w-6xl mx-auto">
-          {/* Header */}
           <div ref={headerRef} className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-6">
               Automatizamos{' '}
@@ -144,23 +141,32 @@ export function AutomationMap() {
             </p>
           </div>
 
-          {/* Constellation layout */}
           <div className="relative">
             {/* Desktop: Constellation */}
-            <div className="hidden lg:block relative h-[500px]">
-              {/* Center hub */}
+            {/* ✅ Altura aumentada de 500 → 680 para acomodar o raio maior */}
+            <div className="hidden lg:block relative h-[680px]">
+
+              {/* Center hub — logo SVG no lugar do ícone Cpu */}
               <div
                 ref={centerRef}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                style={{ zIndex: 10 }}
               >
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-hevix-orange to-hevix-orange-light flex items-center justify-center shadow-glow animate-pulse-glow">
-                  <Cpu className="w-12 h-12 text-white" />
+                <div className="w-28 h-28 rounded-full bg-gradient-to-br from-hevix-orange to-hevix-orange-light flex items-center justify-center shadow-glow animate-pulse-glow p-5">
+                  {/* ✅ Logo do projeto no lugar do ícone Cpu */}
+                  <img
+                    src="/dist/assets/logo.svg"
+                    alt="Hevix IA"
+                    className="w-full h-full object-contain"
+                  />
                 </div>
-                <p className="text-center text-white font-semibold mt-4">Hevix IA</p>
               </div>
 
-              {/* Connection lines SVG */}
-              <svg className="absolute inset-0 w-full h-full pointer-events-none">
+              {/* Connection lines — sempre atrás */}
+              <svg
+                className="absolute inset-0 w-full h-full pointer-events-none"
+                style={{ zIndex: 1 }}
+              >
                 <defs>
                   <linearGradient id="connGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stopColor="#ff6a00" stopOpacity="0.3" />
@@ -169,12 +175,12 @@ export function AutomationMap() {
                 </defs>
                 {automationAreas.map((_, index) => {
                   const angle = (index * 60 - 90) * (Math.PI / 180);
-                  const radius = 180;
+                  // Proporção ajustada para o novo raio e nova altura (680px)
                   const cx = 50;
                   const cy = 50;
-                  const x = cx + (radius / 500) * 50 * Math.cos(angle);
-                  const y = cy + (radius / 500) * 50 * Math.sin(angle);
-                  
+                  const x = cx + (ORBIT_RADIUS / 680) * 100 * Math.cos(angle) * 0.5;
+                  const y = cy + (ORBIT_RADIUS / 680) * 100 * Math.sin(angle);
+
                   return (
                     <line
                       key={index}
@@ -196,10 +202,10 @@ export function AutomationMap() {
               {/* Orbiting cards */}
               {automationAreas.map((area, index) => {
                 const angle = (index * 60 - 90) * (Math.PI / 180);
-                const radius = 180;
-                const x = Math.cos(angle) * radius;
-                const y = Math.sin(angle) * radius;
+                const x = Math.cos(angle) * ORBIT_RADIUS;
+                const y = Math.sin(angle) * ORBIT_RADIUS;
                 const Icon = area.icon;
+                const isHovered = hoveredIndex === index;
 
                 return (
                   <div
@@ -207,18 +213,19 @@ export function AutomationMap() {
                     className="automation-card absolute top-1/2 left-1/2"
                     style={{
                       transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+                      zIndex: isHovered ? 30 : 2,
                     }}
                     onMouseEnter={() => setHoveredIndex(index)}
                     onMouseLeave={() => setHoveredIndex(null)}
                   >
                     <div
                       className={`glass rounded-2xl p-5 border transition-all duration-300 cursor-pointer min-w-[180px] ${
-                        hoveredIndex === index
+                        isHovered
                           ? 'border-hevix-orange/50 scale-110'
                           : 'border-white/5 hover:border-white/20'
                       }`}
                       style={{
-                        boxShadow: hoveredIndex === index ? `0 0 30px ${area.color}30` : 'none',
+                        boxShadow: isHovered ? `0 0 30px ${area.color}30` : 'none',
                       }}
                     >
                       <div
@@ -266,7 +273,6 @@ export function AutomationMap() {
             </div>
           </div>
 
-          {/* Bottom CTA */}
           <div className="mt-16 text-center">
             <a
               href="#formulario"

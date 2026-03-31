@@ -11,7 +11,6 @@ import { FutureVision } from '@/sections/FutureVision';
 import { AutomationMap } from '@/sections/AutomationMap';
 import { Process } from '@/sections/Process';
 import { Benefits } from '@/sections/Benefits';
-import { Testimonials } from '@/sections/Testimonials';
 import { FinalCTA } from '@/sections/FinalCTA';
 import { Footer } from '@/sections/Footer';
 
@@ -61,9 +60,6 @@ function App() {
         
         {/* Benefits Section */}
         <Benefits />
-        
-        {/* Testimonials */}
-        <Testimonials />
         
         {/* Final CTA */}
         <FinalCTA />
